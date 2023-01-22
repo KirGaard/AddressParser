@@ -8,5 +8,10 @@ module kirgaard.addressparser {
     requires org.kordamp.bootstrapfx.core;
 
     opens kirgaard.addressparser to javafx.fxml;
+    opens kirgaard.addressparser.Model to javafx.fxml;
+    opens kirgaard.addressparser.Controller to javafx.fxml;
+
     exports kirgaard.addressparser;
+    exports kirgaard.addressparser.Model;
+    exports kirgaard.addressparser.Controller;
 }
