@@ -7,7 +7,7 @@ import java.util.regex.Pattern;
 
 public class Parser implements IParser{
 
-    private final String parseRegex = "^(?<roadName>\\D+)*(?<roadNum>[0-9]+[a-z]*)*\\D*(?<postalCode>[0-9]{4})*[\\s\\d]*(?<cityName>\\D*)";
+    private final String parseRegex = "^(?<roadName>\\D+)?\\s*(?<roadNum>([0-9]{1,3}(?![0-9])[a-z]?))?[\\sa-z]*(?<postalCode>[0-9]{4})?[^a-zæøå]*(?<cityName>[a-zæøå]+)?";
     private Pattern pattern;
 
     public Parser() {
@@ -27,33 +27,18 @@ public class Parser implements IParser{
             throw new NoMatchFoundException();
         }
 
-        String roadName = "";
-        try {
-            roadName = matcher.group("roadName");
-        }catch (IllegalArgumentException e){
+        String roadName = matcher.group("roadName");
+        String roadNum = matcher.group("roadNum");
+        String postalCode = matcher.group("postalCode");
+        String cityName = matcher.group("cityName");
 
+        if (cityName == null && roadName != null){
+            cityName = roadName;
+
+            String[] words = cityName.split(" ");
+            cityName = words[words.length - 1];
         }
 
-        String roadNum = "";
-        try {
-            roadNum = matcher.group("roadNum");
-        }catch (IllegalArgumentException e){
-
-        }
-
-        String postalCode = "";
-        try {
-            postalCode = matcher.group("postalCode");
-        }catch (IllegalArgumentException e){
-
-        }
-
-        String cityName = "";
-        try {
-            cityName = matcher.group("cityName");
-        }catch (IllegalArgumentException e){
-
-        }
 
 
         return new Address(roadName, roadNum, roadName + roadNum, postalCode, cityName);
